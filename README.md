@@ -1,5 +1,20 @@
 # Schedule Job Agent
 
+- Immediately sends an API request based on the information received from the API request.
+- The requested response results are saved in the DB.
+
+- API 요청 받은 정보를 바탕으로 즉시 API 요청을 보냅니다.
+- 요청한 응답 결과를 DB에 저장합니다.
+
+## Require
+
+- PostgreSQL 14 or higher
+- Go 1.20 or higher
+
+## Prepared
+
+- [Create Table in PostgreSQL](./sql/agent.sql)
+
 ## Run
 
 - Docker
