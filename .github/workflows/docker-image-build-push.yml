@@ -20,7 +20,7 @@ jobs:
 
     - name: Extract current date
       id: date
-      run: echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+      run: echo "DATE=$(date +'%Y%m%d_%H%M')" >> $GITHUB_ENV
 
     - name: Build and push
       uses: docker/build-push-action@v6
@@ -32,4 +32,3 @@ jobs:
         platforms: |
           linux/amd64
           linux/arm64
-          linux/arm/v7
