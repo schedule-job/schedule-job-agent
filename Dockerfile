@@ -13,6 +13,7 @@ EXPOSE 8080/tcp
 EXPOSE 8080/udp
 
 ENV TZ=Asia/Seoul
+ENV GIN_MODE=release
 
 COPY --from=build /go/main .
 COPY --from=build /usr/share/zoneinfo /usr/share/zoneinfo
