@@ -34,11 +34,11 @@ POSTGRES_SQL_DSN="postgresql://{user}:{pw}@{host}:{port}/{db}?sslmode=disable&se
 ```json
 [
   {
-    id: UUID
-    url: string
-    method: string
-    body: string
-    headers: map[string][]string
+    "id": "UUID",
+    "url": "string",
+    "method": "string",
+    "body": "string",
+    "headers": "map[string][]string,"
   },
   ...
 ]
