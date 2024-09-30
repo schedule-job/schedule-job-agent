@@ -29,7 +29,6 @@ jobs:
         tags: |
           sotaneum/schedule-job-agent:${{ env.DATE }}
           sotaneum/schedule-job-agent:latest
-        context: .
         platforms: |
           linux/amd64
           linux/arm64
