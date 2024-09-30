@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	parser "github.com/Sotaneum/go-args-parser"
 	"github.com/gin-gonic/gin"
@@ -13,11 +14,13 @@ import (
 type Options struct {
 	Port           string
 	PostgresSqlDsn string
+	TrustedProxies string
 }
 
 var DEFAULT_OPTIONS = map[string]string{
 	"PORT":             "8080",
 	"POSTGRES_SQL_DSN": "",
+	"TRUSTED_PROXIES":  "",
 }
 
 func getOptions() *Options {
@@ -26,6 +29,7 @@ func getOptions() *Options {
 	options := new(Options)
 	options.Port = rawOptions["PORT"]
 	options.PostgresSqlDsn = rawOptions["POSTGRES_SQL_DSN"]
+	options.TrustedProxies = rawOptions["TRUSTED_PROXIES"]
 
 	return options
 }
@@ -55,6 +59,11 @@ func main() {
 	router := gin.Default()
 	router.Use(ginsession.New())
 
+	if options.TrustedProxies != "" {
+		trustedProxies := strings.Split(options.TrustedProxies, ",")
+		router.SetTrustedProxies(trustedProxies)
+	}
+
 	router.POST("/api/v1/request", func(ctx *gin.Context) {
 		var jobs = []job.Job{}
 		bindDataErr := ctx.ShouldBindJSON(&jobs)
@@ -77,6 +86,8 @@ func main() {
 	router.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(404, gin.H{"code": 404, "message": "접근 할 수 없는 페이지입니다!"})
 	})
+
+	fmt.Println("Started Agent! on " + options.Port)
 
 	router.Run(":" + options.Port)
 }
