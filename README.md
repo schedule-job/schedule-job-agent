@@ -1,5 +1,10 @@
 # Schedule Job Agent
 
+[![Docker Image Build With Push](https://github.com/schedule-job/schedule-job-agent/actions/workflows/docker-image-build-push.yml/badge.svg)](https://github.com/schedule-job/schedule-job-agent/actions/workflows/docker-image-build-push.yml) ![Docker Pulls](https://img.shields.io/docker/pulls/sotaneum/schedule-job-agent?logoColor=fff&logo=docker) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/schedule-job/schedule-job-agent?logo=go&logoColor=fff) ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/sotaneum/schedule-job-agent/latest?logoColor=fff&logo=docker) ![postgresql](https://img.shields.io/badge/14_or_higher-blue?logo=postgresql&logoColor=fff&label=PostgreSQL
+) 
+
+
+
 - Immediately sends an API request based on the information received from the API request.
 - The requested response results are saved in the DB.
 
@@ -55,7 +60,6 @@ POSTGRES_SQL_DSN="postgresql://{user}:{pw}@{host}:{port}/{db}?sslmode=disable&se
     "body": "string",
     "headers": "map[string][]string,"
   },
-  ...
 ]
 ```
 
