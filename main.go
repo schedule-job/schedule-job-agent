@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	parser "github.com/Sotaneum/go-args-parser"
@@ -81,6 +82,36 @@ func main() {
 		}
 
 		ctx.JSON(200, gin.H{"code": 200, "data": "ok"})
+	})
+
+	router.GET("/api/v1/request/:jobId/logs", func(ctx *gin.Context) {
+		jobId := ctx.Param("jobId")
+		lastId := ctx.Query("lastId")
+		limit, cnvErr := strconv.Atoi(ctx.Query("limit"))
+		if cnvErr != nil {
+			limit = 20
+		}
+		logs, dbErr := database.GetRequestLogs(jobId, lastId, limit)
+
+		if dbErr != nil {
+			ctx.JSON(400, gin.H{"code": 400, "message": dbErr.Error()})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"code": 200, "data": logs})
+	})
+
+	router.GET("/api/v1/request/:jobId/log/:id", func(ctx *gin.Context) {
+		id := ctx.Query("id")
+		jobId := ctx.Param("jobId")
+		log, dbErr := database.GetRequestLogDetail(id, jobId)
+
+		if dbErr != nil {
+			ctx.JSON(400, gin.H{"code": 400, "message": dbErr.Error()})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"code": 200, "data": &log})
 	})
 
 	router.NoRoute(func(ctx *gin.Context) {
