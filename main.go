@@ -102,8 +102,9 @@ func main() {
 	})
 
 	router.GET("/api/v1/request/:jobId/log/:id", func(ctx *gin.Context) {
-		id := ctx.Query("id")
+		id := ctx.Param("id")
 		jobId := ctx.Param("jobId")
+
 		log, dbErr := database.GetRequestLogDetail(id, jobId)
 
 		if dbErr != nil {

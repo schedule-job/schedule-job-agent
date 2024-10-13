@@ -2,6 +2,7 @@ package pg
 
 import (
 	"context"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/schedule-job/schedule-job-agent/internal/job"
@@ -16,9 +17,17 @@ func (p *PostgresSQL) InsertRequestLog(jobID string, data job.Request) error {
 }
 
 func (p *PostgresSQL) GetRequestLogs(jobId, lastId string, limit int) ([]log.Log, error) {
+	var lastCreated = time.Date(1990, 1, 1, 1, 0, 0, 0, time.UTC)
+	if lastId != "" {
+		log, err := p.GetRequestLogDetail(lastId, jobId)
+		if err == nil {
+			lastCreated = log.CreatedAt
+		}
+	}
+
 	data, dbErr := p.usePostgresSQL(func(client *pgx.Conn, ctx context.Context) (interface{}, error) {
 		logs := []log.Log{}
-		rows, queryErr := client.Query(ctx, "SELECT id, job_id, status, request_url, request_method, response_status_code, created_at FROM request_logs WHERE id > $1 AND job_id = $2 ORDER BY created_at LIMIT $3", lastId, jobId, limit)
+		rows, queryErr := client.Query(ctx, "SELECT id, job_id, status, request_url, request_method, response_status_code, created_at FROM request_logs WHERE created_at > $1 AND job_id = $2 ORDER BY created_at LIMIT $3", lastCreated, jobId, limit)
 
 		if queryErr != nil {
 			return nil, queryErr
@@ -46,7 +55,7 @@ func (p *PostgresSQL) GetRequestLogs(jobId, lastId string, limit int) ([]log.Log
 func (p *PostgresSQL) GetRequestLogDetail(id, jobId string) (*log.DetailLog, error) {
 	log := log.DetailLog{}
 	_, dbErr := p.usePostgresSQL(func(client *pgx.Conn, ctx context.Context) (interface{}, error) {
-		queryErr := client.QueryRow(ctx, "SELECT id, job_id, status, request_url, request_method, request_headers, request_body, response_headers, response_body, response_status_code, created_at FROM request_logs WHERE id = $1 and job_id = $2", id, jobId).Scan(
+		queryErr := client.QueryRow(ctx, "SELECT id, job_id, status, request_url, request_method, request_headers, request_body, response_headers, response_body, response_status_code, created_at FROM request_logs WHERE id = $1 AND job_id = $2", id, jobId).Scan(
 			&log.Id,
 			&log.JobId,
 			&log.Status,

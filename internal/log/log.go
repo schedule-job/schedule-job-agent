@@ -1,13 +1,15 @@
 package log
 
+import "time"
+
 type Log struct {
-	Id                 string `json:"id"`
-	JobId              string `json:"jobId"`
-	Status             string `json:"status"`
-	RequestUrl         string `json:"requestUrl"`
-	RequestMethod      string `json:"requestMethod"`
-	ResponseStatusCode int    `json:"responseStatusCode"`
-	CreatedAt          int    `json:"createdAt"`
+	Id                 string    `json:"id"`
+	JobId              string    `json:"jobId"`
+	Status             string    `json:"status"`
+	RequestUrl         string    `json:"requestUrl"`
+	RequestMethod      string    `json:"requestMethod"`
+	ResponseStatusCode int       `json:"responseStatusCode"`
+	CreatedAt          time.Time `json:"createdAt"`
 }
 
 type DetailLog struct {
