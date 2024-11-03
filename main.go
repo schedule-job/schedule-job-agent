@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	ginsession "github.com/go-session/gin-session"
 	"github.com/schedule-job/schedule-job-agent/internal/job"
-	"github.com/schedule-job/schedule-job-agent/internal/pg"
+	"github.com/schedule-job/schedule-job-database/pg"
 )
 
 type Options struct {

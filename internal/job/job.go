@@ -26,7 +26,7 @@ type Response struct {
 }
 
 type Database interface {
-	InsertRequestLog(jobID string, data Request) error
+	InsertRequestLog(jobID string, data interface{}) error
 }
 
 type Job struct {
