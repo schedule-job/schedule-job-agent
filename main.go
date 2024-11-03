@@ -91,7 +91,7 @@ func main() {
 		if cnvErr != nil {
 			limit = 20
 		}
-		logs, dbErr := database.GetRequestLogs(jobId, lastId, limit)
+		logs, dbErr := database.SelectRequestLogs(jobId, lastId, limit)
 
 		if dbErr != nil {
 			ctx.JSON(400, gin.H{"code": 400, "message": dbErr.Error()})
@@ -105,7 +105,7 @@ func main() {
 		id := ctx.Param("id")
 		jobId := ctx.Param("jobId")
 
-		log, dbErr := database.GetRequestLogDetail(id, jobId)
+		log, dbErr := database.SelectRequestLog(id, jobId)
 
 		if dbErr != nil {
 			ctx.JSON(400, gin.H{"code": 400, "message": dbErr.Error()})

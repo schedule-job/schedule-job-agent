@@ -41,7 +41,7 @@ require (
 	github.com/go-session/gin-session v3.1.0+incompatible
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
-	github.com/schedule-job/schedule-job-database v0.0.0-20241102122318-b42f90974108
+	github.com/schedule-job/schedule-job-database v1.0.0-alpha.1
 	golang.org/x/crypto v0.27.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
 )

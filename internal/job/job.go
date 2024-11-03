@@ -5,28 +5,15 @@ import (
 	"io"
 	"net/http"
 	"strings"
-)
 
-type Request struct {
-	Status             string
-	RequestUrl         string
-	RequestMethod      string
-	RequestHeaders     map[string][]string
-	RequestBody        string
-	ResponseHeaders    map[string][]string
-	ResponseBody       string
-	ResponseStatusCode int
-}
+	"github.com/schedule-job/schedule-job-database/core"
+)
 
 type Response struct {
 	ID    string
-	Log   *Request
+	Log   *core.RequestTypePayload
 	Res   *http.Response
 	Error error
-}
-
-type Database interface {
-	InsertRequestLog(jobID string, data interface{}) error
 }
 
 type Job struct {
@@ -35,15 +22,15 @@ type Job struct {
 	Method   string              `json:"method"`
 	Body     string              `json:"body"`
 	Headers  map[string][]string `json:"headers"`
-	database Database
+	database core.Database
 }
 
-func (j *Job) SetDatabase(database Database) {
+func (j *Job) SetDatabase(database core.Database) {
 	j.database = database
 }
 
-func (j Job) getDefaultLog() Request {
-	var log = Request{}
+func (j Job) getDefaultLog() core.RequestTypePayload {
+	var log = core.RequestTypePayload{}
 	log.Status = "progress"
 	log.RequestUrl = j.Url
 	log.RequestMethod = j.Method
