@@ -10,6 +10,7 @@ import (
 	ginsession "github.com/go-session/gin-session"
 	"github.com/schedule-job/schedule-job-agent/internal/job"
 	"github.com/schedule-job/schedule-job-database/pg"
+	schedule_errors "github.com/schedule-job/schedule-job-errors"
 )
 
 type Options struct {
@@ -49,10 +50,12 @@ func safeGo(f func()) {
 func main() {
 	options := getOptions()
 	if len(options.PostgresSqlDsn) == 0 {
-		panic("not found 'POSTGRES_SQL_DSN' options")
+		err := schedule_errors.InvalidArgumentError{Param: "POSTGRES_SQL_DSN"}
+		panic(err)
 	}
 	if len(options.Port) == 0 {
-		panic("not found 'PORT' options")
+		err := schedule_errors.InvalidArgumentError{Param: "PORT"}
+		panic(err)
 	}
 
 	database := pg.New(options.PostgresSqlDsn)
@@ -70,7 +73,8 @@ func main() {
 		bindDataErr := ctx.ShouldBindJSON(&jobs)
 
 		if bindDataErr != nil {
-			ctx.JSON(400, gin.H{"code": 400, "message": "잘못된 파라미터 입니다. (" + bindDataErr.Error() + ")"})
+			err := schedule_errors.InvalidArgumentError{Param: "body", Message: bindDataErr.Error()}
+			ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
 			return
 		}
 
@@ -94,7 +98,8 @@ func main() {
 		logs, dbErr := database.SelectRequestLogs(jobId, lastId, limit)
 
 		if dbErr != nil {
-			ctx.JSON(400, gin.H{"code": 400, "message": dbErr.Error()})
+			err := schedule_errors.QueryError{Err: dbErr}
+			ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
 			return
 		}
 
@@ -108,7 +113,8 @@ func main() {
 		log, dbErr := database.SelectRequestLog(id, jobId)
 
 		if dbErr != nil {
-			ctx.JSON(400, gin.H{"code": 400, "message": dbErr.Error()})
+			err := schedule_errors.QueryError{Err: dbErr}
+			ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
 			return
 		}
 
@@ -116,7 +122,8 @@ func main() {
 	})
 
 	router.NoRoute(func(ctx *gin.Context) {
-		ctx.JSON(404, gin.H{"code": 404, "message": "접근 할 수 없는 페이지입니다!"})
+		err := schedule_errors.NotFoundError{}
+		ctx.JSON(404, gin.H{"code": 404, "message": err.Error()})
 	})
 
 	fmt.Println("Started Agent! on " + options.Port)

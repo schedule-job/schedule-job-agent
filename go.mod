@@ -4,6 +4,8 @@ go 1.23.1
 
 require github.com/jackc/pgx/v5 v5.7.1 // indirect
 
+require github.com/schedule-job/schedule-job-errors v1.0.0-alpha.1
+
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect

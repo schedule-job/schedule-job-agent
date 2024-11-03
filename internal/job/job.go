@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/schedule-job/schedule-job-database/core"
+	schedule_errors "github.com/schedule-job/schedule-job-errors"
 )
 
 type Response struct {
@@ -71,7 +72,8 @@ func (j Job) done(res *http.Response, err error) {
 
 	err = j.database.InsertRequestLog(j.ID, log)
 	if err != nil {
-		fmt.Println("로그 삽입 실패:", err)
+		write := schedule_errors.LogWriteError{Reason: err.Error()}
+		fmt.Println(write.Error())
 	}
 }
 
@@ -81,7 +83,8 @@ func (j Job) failed(err error) {
 	log.ResponseBody = err.Error()
 	err = j.database.InsertRequestLog(j.ID, log)
 	if err != nil {
-		fmt.Println("로그 삽입 실패 :", err)
+		write := schedule_errors.LogWriteError{Reason: err.Error()}
+		fmt.Println(write.Error())
 	}
 }
 
@@ -102,7 +105,8 @@ func (j Job) requestFailed(res *http.Response, err error) {
 	log.ResponseStatusCode = res.StatusCode
 	err = j.database.InsertRequestLog(j.ID, log)
 	if err != nil {
-		fmt.Println("로그 삽입 실패 :", err)
+		write := schedule_errors.LogWriteError{Reason: err.Error()}
+		fmt.Println(write.Error())
 	}
 }
 
